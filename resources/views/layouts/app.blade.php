@@ -33,7 +33,13 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {{ Route::is('inicio') ? 'active' : '' }}" href="{{ route('inicio') }}">{{ __('Lista de empleados') }}</a>
+                        </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link {{ Route::is('formulario.crear') ? 'active' : '' }}" href="{{ route('formulario.crear') }}">{{ __('Añadir nuevo') }}</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

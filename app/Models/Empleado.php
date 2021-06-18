@@ -26,5 +26,6 @@ class Empleado extends Model
         'apellido_materno',
         'correo',
         'estatus',
+        'tipo_contrato'
     ];
 }

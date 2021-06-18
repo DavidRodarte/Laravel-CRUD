@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Empleado;
 
+use Session;
+use Redirect;
+
 class EmpleadoController extends Controller
 {
     /**
@@ -20,16 +23,50 @@ class EmpleadoController extends Controller
      * Método para listar empleados
      * de manera opcional se puede consultar a los
      * usuarios inactivos
-     * @param $inactivos = 0 {Integer}
+     * @param $todos = 0 {Integer}
      * @return View
      */
 
-     public function index($inactivos = 0){
-         $empleados = Empleado::where('activo')->get();
+     public function index($todos = 0){
+         $empleados = Empleado::where('estatus', 1)->get();
 
-         return view('empleados.index', compact('empleados'));
+         if($todos){
+            $empleados = Empleado::all();
+         }
+
+         return view('empleados.index', compact('empleados', 'todos'));
      }
 
+     /**
+      * Formulario para crear
+      * @return View
+      */
+
+      public function formCrear(){
+          return view('empleados.formCrear');
+      }
+
+        /**
+        * Formulario para editar
+        * @param $id {Int}
+        * @return View
+        */
+
+        public function formEditar($id){
+            $empleado = Empleado::findOrFail($id);
+            return view('empleados.formEditar', compact('empleado'));
+        }
+
+        /**
+         * Ver datos del empleado
+         * @param $id {Int}
+         * @return View
+         */
+
+         public function show($id){
+             $empleado = Empleado::findOrFail($id);
+             return view('empleados.verEmpleado', compact('empleado'));
+         }
 
      /**
       * Crear un nuevo empleado
@@ -42,9 +79,10 @@ class EmpleadoController extends Controller
            * Validación de campos requeridos
            */
           $request->validate([
-            'nombre'=>'required',
-            'apellido_paterno'=>'required',
-            'correo'=>'required',
+            'nombre'=> 'required',
+            'apellido_paterno'=> 'required',
+            'correo'=> 'required',
+            'tipo_contrato' =>' required'
           ]);
 
           /**
@@ -72,9 +110,10 @@ class EmpleadoController extends Controller
       public function update(Request $request, $id)
       {
         $request->validate([
-            'nombre'=>'required',
-            'apellido_paterno'=>'required',
-            'correo'=>'required',
+            'nombre'=> 'required',
+            'apellido_paterno'=> 'required',
+            'correo'=> 'required',
+            'tipo_contrato' =>' required'
         ]);
         //Buscar si existe el empleado y guardar los datos
         $empleado = Empleado::findOrFail($id);
@@ -82,8 +121,8 @@ class EmpleadoController extends Controller
        
         //Mostrar mensaje
         Session::flash('message','Se ha actualizado al empleado correctamente');
-        //Redireccionar al listado de artículos
-        return redirect::to('/');
+        //Redireccionar al listado de empleados
+        return redirect::to('/empleado/'.$id);
       }
 
       /**
@@ -101,9 +140,9 @@ class EmpleadoController extends Controller
         $empleado->save();
 
         //Mostrar mensaje
-        Session::flash('message','Se ha actualizado al empleado correctamente');
+        Session::flash('message','Se ha actualizado el estatus correctamente');
         //Redireccionar al listado de artículos
-        return redirect::to('/');
+        return redirect::to('/empleado/'.$id);
       }
 
       /**
@@ -117,6 +156,6 @@ class EmpleadoController extends Controller
         $empleado = Empleado::findOrFail($id);
         $empleado->delete();
         Session::flash('message','Se ha eliminado al empleado correctamente');
-        return redirect::to('articulos');
+        return redirect::to('/');
       }
 }

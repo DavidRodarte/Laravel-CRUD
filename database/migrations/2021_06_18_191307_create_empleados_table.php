@@ -19,6 +19,7 @@ class CreateEmpleadosTable extends Migration
             $table->string('nombre');
             $table->string('apellido_paterno');
             $table->string('apellido_materno')->nullable();
+            $table->string('tipo_contrato');
             $table->string('correo');
 
             /**
